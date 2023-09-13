@@ -6,11 +6,9 @@ import com.phonebook.app.service.ContactService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -49,7 +47,17 @@ public class ContactController {
         model.addAttribute("contact", service.getContact(lastName));
 
 
-        return "contacts/add-contact";
+        return "contacts/update-contact";
+    }
+
+    @PostMapping("/save/{lastName}")
+    public String updateContact(@PathVariable String lastName, @ModelAttribute("contact") Contact updatedContact) throws ResourceNotFoundException {
+        Contact contact = service.getContact(lastName);
+
+        contact.setPhone(updatedContact.getPhone());
+        service.saveContact(contact);
+
+        return "redirect:/api/v1/contacts/list";
     }
 
     @PostMapping("/save")

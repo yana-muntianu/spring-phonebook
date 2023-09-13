@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,36 +36,38 @@ public class ContactController {
     @Autowired
     private ContactService service;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/contacts")
-    @ResponseBody
-    public List<Contact> listContacts(Model model) {
+    public @ResponseBody List<Contact> listContacts() {
         LOG.debug("inside show customer-rest handler method");
         return service.getContacts();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/contacts", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
-    public Contact createContact(@RequestBody Contact contact) {
+    @PostMapping(path = "/contacts")
+    public @ResponseBody Contact createContact(@RequestBody Contact contact) {
         return service.saveContact(contact);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/contacts/{lastName}")
-    @ResponseBody
-    public Contact getContact(@PathVariable String lastName) throws ResourceNotFoundException {
+    public @ResponseBody Contact getContact(@PathVariable String lastName) throws ResourceNotFoundException {
         return service.getContact(lastName);
     }
 
-    @PostMapping("/contacts/{lastName}")
-    @ResponseBody
-    public Contact updateContact(@PathVariable String lastName, @RequestBody Contact updatedContact) throws ResourceNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/contacts/{lastName}")
+    public @ResponseBody Contact updateContact(@PathVariable String lastName, @RequestBody Contact updatedContact) throws ResourceNotFoundException {
         Contact contact = service.getContact(lastName);
+
         contact.setFirstName(updatedContact.getFirstName());
         contact.setLastName(updatedContact.getLastName());
         contact.setPhone(updatedContact.getPhone());
+
         return contact;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/contacts/{lastName}")
     @ResponseBody
     public void deleteContact(@PathVariable String lastName) throws ResourceNotFoundException {
