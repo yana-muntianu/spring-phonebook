@@ -38,26 +38,26 @@ public class ContactController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/contacts")
-    public @ResponseBody List<Contact> listContacts() {
+    public List<Contact> listContacts() {
         LOG.debug("inside show customer-rest handler method");
         return service.getContacts();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/contacts")
-    public @ResponseBody Contact createContact(@RequestBody Contact contact) {
+    @PostMapping("/contacts")
+    public Contact createContact(@RequestBody Contact contact) {
         return service.saveContact(contact);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/contacts/{lastName}")
-    public @ResponseBody Contact getContact(@PathVariable String lastName) throws ResourceNotFoundException {
+    public Contact getContact(@PathVariable String lastName) throws ResourceNotFoundException {
         return service.getContact(lastName);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/contacts/{lastName}")
-    public @ResponseBody Contact updateContact(@PathVariable String lastName, @RequestBody Contact updatedContact) throws ResourceNotFoundException {
+    public Contact updateContact(@PathVariable String lastName, @RequestBody Contact updatedContact) throws ResourceNotFoundException {
         Contact contact = service.getContact(lastName);
 
         contact.setFirstName(updatedContact.getFirstName());
@@ -69,7 +69,6 @@ public class ContactController {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/contacts/{lastName}")
-    @ResponseBody
     public void deleteContact(@PathVariable String lastName) throws ResourceNotFoundException {
         service.deleteContact(lastName);
     }
